@@ -1,0 +1,8 @@
+1. crear el entorno virutal
+2. activar el entorno virtual
+3. verificar version de django
+4. django-admin startproject djandocrud . -> creamos proyecto dentro de nuestra carpeta
+5. python manage.py runserver -> ejecutamos el servidor en el puerto :8000
+6. python manage.py starapp task(nombre de app) -> asi inicializamos una aplicacion en django
+7. carpeta djangocrud -> tenemos toda la configuracion del proyecto
+8. vamos a carpeta djangocrud -> settings.py -> en INSTALLED APP -> agregamos nuestro 	proyecto, en este caso 'task'
