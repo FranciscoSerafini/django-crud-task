@@ -1,40 +1,42 @@
-from django.shortcuts import render
-# clase que devuelve un formulario
+from django.shortcuts import render, redirect
 from django.contrib.auth.forms import UserCreationForm
-from django.contrib.auth.models import User  # clase para registrar user
+from django.contrib.auth.models import User
 from django.http import HttpResponse
+from django.contrib.auth import login
+from django.db import IntegrityError
 
-
-# Create your views here.
 def home(request):
-    return render(request, 'home.html', {
-
-    })
-
+    return render(request, 'home.html')
 
 def signup(request):
-    # se registra el usuario
     if request.method == 'GET':
         return render(request, 'signup.html', {
-            'forms': UserCreationForm
+            'forms': UserCreationForm()
         })
-    else:  # si las contraseñas no coinciden
+    else:
         if request.POST['password1'] == request.POST['password2']:
-           try:
-               # register user
-               usuario = User.objects.create_user(
-                   username=request.POST['username'], password=request.POST['password1'])
-               # hay que pasarle ususario y contraseña
-               usuario.save()
-               return HttpResponse('Usuario creado')
-           except:
-               return render(request, 'signup.html', {
-                   'forms': UserCreationForm,
-                   'error': 'El ususario ya extiste'
-               })
+            try:
+                # Intentar registrar el usuario
+                usuario = User.objects.create_user(
+                    username=request.POST['username'], password=request.POST['password1'])
+                usuario.save()
+                login(request, usuario)
+                return redirect('Tasks')  # Asegúrate de que 'tasks' esté definido en tus urls
+            except IntegrityError:
+                return render(request, 'signup.html', {
+                    'forms': UserCreationForm(),
+                    'error': 'El usuario ya existe'
+                })
+            except Exception as e:
+                return render(request, 'signup.html', {
+                    'forms': UserCreationForm(),
+                    'error': f'Error desconocido: {str(e)}'
+                })
         return render(request, 'signup.html', {
-        'forms': UserCreationForm,
-        'error':'Las contraseñas no coinciden'
+            'forms': UserCreationForm(),
+            'error': 'Las contraseñas no coinciden'
         })
 
-   
+def task(request):
+    return render(request, 'tasks.html')
+
