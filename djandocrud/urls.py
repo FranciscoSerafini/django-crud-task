@@ -20,6 +20,6 @@ from task import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', views.hellowordl),
-    path('signup/', views.hellowordl)
+    path('', views.home, name="Home"),
+    path('signup/', views.signup, name="Signup")
 ]
